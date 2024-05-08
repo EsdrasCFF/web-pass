@@ -3,6 +3,7 @@ import { IconButton } from "./icon-button";
 import { Table } from "./table/table";
 import { TableHeader } from "./table/table-header";
 import { TableData } from "./table/table-data";
+import { TableRow } from "./table/table-row";
 
 export function AttendeeList() {
   return (
@@ -37,7 +38,7 @@ export function AttendeeList() {
           <tbody className="text-sm font-normal text-gray-200 border-b border-white/10" >
             {Array.from({length: 10}).map((_, i) => {
               return (
-                <tr key={String(i+'a')} className="border-b border-white/10 hover:bg-white/5" >
+                <TableRow key={String(i+'a')}  >
                   <TableData> <input type="checkbox" className="size-4 bg-black/20 rounded border-white/10 " /> </TableData>
                   
                   <TableData> 15456 </TableData>
@@ -58,7 +59,7 @@ export function AttendeeList() {
                       <MoreHorizontal className="size-4" /> 
                     </IconButton> 
                   </TableData>
-                </tr>
+                </TableRow>
               )
             })}
           </tbody>
