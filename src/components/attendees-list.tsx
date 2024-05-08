@@ -4,24 +4,33 @@ import { Table } from "./table/table";
 import { TableHeader } from "./table/table-header";
 import { TableData } from "./table/table-data";
 import { TableRow } from "./table/table-row";
-import { attendees } from "../data/attendees";
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
-export function AttendeeList() {
+interface IAttendees {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+  checkedInAt: string | null
+}
 
-  const totalPages = Math.ceil(attendees.length)
+export function AttendeesList() {
 
   const [page, setPage] = useState(1)
+  const [search, setSearch] = useState('')
+  const [attendees, setAttendees] = useState<IAttendees[]>([])
+
+  const [total, setTotal]= useState(1)
+
+  const totalPages = Math.ceil(total / 10)
 
   function goToNextPage() {
-    
     setPage(page + 1)
   }
 
   function goToPreviousPage() {
-    
     setPage(page - 1)
   }
 
@@ -30,8 +39,32 @@ export function AttendeeList() {
   }
 
   function goToLastPage() {
-    setPage(totalPages / 10)
+    setPage(Math.ceil(total / 10))
   }
+
+  function handleSearchInputChange(event: ChangeEvent<HTMLInputElement>) {
+    setSearch(event.target.value)
+    setPage(1)
+  }
+
+  useEffect(() => {
+    
+    const url = new URL('http://localhost:3333/events/9e9bd979-9d10-4915-b339-3786b1634f33/attendees')
+
+    url.searchParams.set('pageIndex', String(page-1))
+
+    if(search.length > 0) {
+      url.searchParams.set('query', search)
+    }
+    
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data)
+        setAttendees(data.attendees)
+        setTotal(data.total)
+      })
+  }, [page, search])
 
   return (
     <div className="flex flex-col gap-4" >
@@ -40,7 +73,12 @@ export function AttendeeList() {
 
         <div className="flex gap-3 items-center max-w-72 rounded-lg text-sm py-1.5 px-3 border border-white/10" >
           <Search  className="size-4 text-emerald-500" />
-          <input placeholder="Buscar participante..." className=" bg-transparent flex-1 border-none outline-none shadow-none "/>
+          <input 
+            placeholder="Buscar participante..." 
+            className=" bg-transparent flex-1 border-none outline-none shadow-none focus:ring-0 " 
+            onChange={(event) => handleSearchInputChange(event)}
+          />
+        
         </div>
       </div>
 
@@ -63,23 +101,23 @@ export function AttendeeList() {
             </tr>
           </thead>
           <tbody className="text-sm font-normal text-gray-200 border-b border-white/10" >
-            {attendees.slice(((page - 1) * 10),(page * 10)).map((attendees) => {
+            {attendees.map((attendee) => {
               return (
-                <TableRow key={attendees.code}  >
+                <TableRow key={attendee.id}  >
                   <TableData> <input type="checkbox" className="size-4 bg-black/20 rounded border-white/10 " /> </TableData>
                   
-                  <TableData> {attendees.code} </TableData>
+                  <TableData> {attendee.id} </TableData>
 
                   <TableData> 
                     <div className="flex flex-col" >
-                      <p className="font-semibold text-white" >{attendees.name}</p>
-                      <span>{attendees.email}</span>
+                      <p className="font-semibold text-white" >{attendee.name}</p>
+                      <span>{attendee.email}</span>
                     </div> 
                   </TableData>
 
-                  <TableData> { formatDistanceToNow(attendees.createdAt, {addSuffix: true, locale: ptBR})}</TableData>
+                  <TableData> { formatDistanceToNow(attendee.createdAt, {addSuffix: true, locale: ptBR})}</TableData>
 
-                  <TableData> { formatDistanceToNow(attendees.checkedInAt, {addSuffix: true, locale: ptBR})} </TableData>
+                  <TableData> { attendee.checkedInAt === null ? 'Não fez checkIn' : formatDistanceToNow(String(attendee.checkedInAt), {addSuffix: true, locale: ptBR})} </TableData>
                 
                   <TableData> 
                     <IconButton transparent > 
@@ -92,11 +130,11 @@ export function AttendeeList() {
           </tbody>
           <tfoot>
             <tr>
-              <TableData colSpan={3} className="px-3 py-3 text-left"> Mostrando 10 de {attendees.length} items </TableData>
+              <TableData colSpan={3} className="px-3 py-3 text-left"> Mostrando {attendees.length} de {total} items </TableData>
 
               <TableData colSpan={3} className="px-3 py-3 text-right"> 
                 <div className="inline-flex gap-3 items-center " >
-                  <span>Página {Math.ceil(page)} de {Math.ceil(totalPages / 10)}</span> 
+                  <span>Página {page} de {totalPages}</span> 
                   
                   <div className="flex gap-1.5" >
                     <IconButton onClick={goToFirstPage} disabled={page === 1}> 
