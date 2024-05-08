@@ -7,8 +7,32 @@ import { TableRow } from "./table/table-row";
 import { attendees } from "../data/attendees";
 import { formatDistanceToNow } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useState } from "react";
 
 export function AttendeeList() {
+
+  const totalPages = Math.ceil(attendees.length)
+
+  const [page, setPage] = useState(1)
+
+  function goToNextPage() {
+    
+    setPage(page + 1)
+  }
+
+  function goToPreviousPage() {
+    
+    setPage(page - 1)
+  }
+
+  function goToFirstPage() {
+    setPage(1)
+  }
+
+  function goToLastPage() {
+    setPage(totalPages / 10)
+  }
+
   return (
     <div className="flex flex-col gap-4" >
       <div className="flex gap-3 items-center" >
@@ -39,7 +63,7 @@ export function AttendeeList() {
             </tr>
           </thead>
           <tbody className="text-sm font-normal text-gray-200 border-b border-white/10" >
-            {attendees.map((attendees) => {
+            {attendees.slice(((page - 1) * 10),(page * 10)).map((attendees) => {
               return (
                 <TableRow key={attendees.code}  >
                   <TableData> <input type="checkbox" className="size-4 bg-black/20 rounded border-white/10 " /> </TableData>
@@ -48,7 +72,7 @@ export function AttendeeList() {
 
                   <TableData> 
                     <div className="flex flex-col" >
-                      <p className="font-semibold" >{attendees.name}</p>
+                      <p className="font-semibold text-white" >{attendees.name}</p>
                       <span>{attendees.email}</span>
                     </div> 
                   </TableData>
@@ -68,26 +92,26 @@ export function AttendeeList() {
           </tbody>
           <tfoot>
             <tr>
-              <TableData colSpan={3} className="px-3 py-3 text-left"> Mostrando 10 de 228 items </TableData>
+              <TableData colSpan={3} className="px-3 py-3 text-left"> Mostrando 10 de {attendees.length} items </TableData>
 
               <TableData colSpan={3} className="px-3 py-3 text-right"> 
                 <div className="inline-flex gap-3 items-center " >
-                  <span>Página 1 de 23</span> 
+                  <span>Página {Math.ceil(page)} de {Math.ceil(totalPages / 10)}</span> 
                   
                   <div className="flex gap-1.5" >
-                    <IconButton > 
+                    <IconButton onClick={goToFirstPage} disabled={page === 1}> 
                       <ChevronsLeft className="size-4" /> 
                     </IconButton>
 
-                    <IconButton > 
+                    <IconButton onClick={goToPreviousPage} disabled={page === 1} > 
                       <ChevronLeft className="size-4" /> 
                     </IconButton>
 
-                    <IconButton > 
+                    <IconButton onClick={goToNextPage} disabled={page === totalPages} > 
                       <ChevronRight className="size-4" /> 
                     </IconButton>
 
-                    <IconButton > 
+                    <IconButton onClick={goToLastPage} disabled={page === totalPages}> 
                       <ChevronsRight className="size-4" /> 
                     </IconButton>
                   </div>
