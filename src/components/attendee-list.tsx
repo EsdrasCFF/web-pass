@@ -64,9 +64,9 @@ export function AttendeeList() {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan={3} className="px-3 py-3 text-left"> Mostrando 10 de 228 items </td>
+              <TableData colSpan={3} className="px-3 py-3 text-left"> Mostrando 10 de 228 items </TableData>
 
-              <td colSpan={3} className="px-3 py-3 text-right"> 
+              <TableData colSpan={3} className="px-3 py-3 text-right"> 
                 <div className="inline-flex gap-3 items-center " >
                   <span>Página 1 de 23</span> 
                   
@@ -88,7 +88,7 @@ export function AttendeeList() {
                     </IconButton>
                   </div>
                 </div>
-              </td>
+              </TableData>
             </tr>
 
           </tfoot>
