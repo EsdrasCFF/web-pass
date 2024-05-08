@@ -1,4 +1,5 @@
 import logoIcon from '../assets/logo.svg'
+import { NavLink } from './nav-link'
 
 
 export function Header() {
@@ -7,8 +8,8 @@ export function Header() {
       <img src={logoIcon} alt='Logo' />
       
       <nav className='flex gap-5 font-medium text-sm' >
-        <a href='' className='text-zinc-400' >Eventos</a>
-        <a href='' >Participantes</a>
+        <NavLink href='/eventos' className='text-zinc-400' >Eventos</NavLink>
+        <NavLink href='/participantes' >Participantes</NavLink>
       </nav>
     </header>
   )
