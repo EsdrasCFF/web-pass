@@ -4,6 +4,9 @@ import { Table } from "./table/table";
 import { TableHeader } from "./table/table-header";
 import { TableData } from "./table/table-data";
 import { TableRow } from "./table/table-row";
+import { attendees } from "../data/attendees";
+import { formatDistanceToNow } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export function AttendeeList() {
   return (
@@ -36,23 +39,23 @@ export function AttendeeList() {
             </tr>
           </thead>
           <tbody className="text-sm font-normal text-gray-200 border-b border-white/10" >
-            {Array.from({length: 10}).map((_, i) => {
+            {attendees.map((attendees) => {
               return (
-                <TableRow key={String(i+'a')}  >
+                <TableRow key={attendees.code}  >
                   <TableData> <input type="checkbox" className="size-4 bg-black/20 rounded border-white/10 " /> </TableData>
                   
-                  <TableData> 15456 </TableData>
+                  <TableData> {attendees.code} </TableData>
 
                   <TableData> 
                     <div className="flex flex-col" >
-                      <p className="font-semibold" >Esdras Castro Ferreiras</p>
-                      <span>esdras.cff@gmail.com</span>
+                      <p className="font-semibold" >{attendees.name}</p>
+                      <span>{attendees.email}</span>
                     </div> 
                   </TableData>
 
-                  <TableData> 7 dias atrás </TableData>
+                  <TableData> { formatDistanceToNow(attendees.createdAt, {addSuffix: true, locale: ptBR})}</TableData>
 
-                  <TableData> 8 dias atrás </TableData>
+                  <TableData> { formatDistanceToNow(attendees.checkedInAt, {addSuffix: true, locale: ptBR})} </TableData>
                 
                   <TableData> 
                     <IconButton transparent > 
