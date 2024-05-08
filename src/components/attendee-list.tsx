@@ -1,5 +1,7 @@
 import {  ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, MoreHorizontal, Search } from "lucide-react";
 import { IconButton } from "./icon-button";
+import { Table } from "./table/table";
+import { TableHeader } from "./table/table-header";
 
 export function AttendeeList() {
   return (
@@ -13,23 +15,22 @@ export function AttendeeList() {
         </div>
       </div>
 
-      <div className="border border-white/10 rounded-lg" >
-        <table className="w-full" >
+      <Table>
           <thead className="text-sm font-semibold border-b border-white/10" >
             <tr>
-              <th style={{width: 38}} className="px-3 py-3 text-left" >
+              <TableHeader style={{width: 38}} >
                 <input type="checkbox" className="size-4 bg-black/20 rounded border-white/10 " />
-              </th>
+              </TableHeader>
               
-              <th className="px-3 py-3 text-left" >Código</th>
+              <TableHeader >Código</TableHeader>
               
-              <th className="px-3 py-3 text-left" >Participante</th>
+              <TableHeader >Participante</TableHeader>
               
-              <th className="px-3 py-3 text-left" >Data da incrição</th>
+              <TableHeader >Data da incrição</TableHeader>
               
-              <th className="px-3 py-3 text-left" >Data do check-in</th>
+              <TableHeader >Data do check-in</TableHeader>
 
-              <th style={{width: 64}} className="px-3 py-3 text-left" ></th>
+              <TableHeader style={{width: 64}} ></TableHeader>
             </tr>
           </thead>
           <tbody className="text-sm font-normal text-gray-200 border-b border-white/10" >
@@ -90,8 +91,7 @@ export function AttendeeList() {
             </tr>
 
           </tfoot>
-        </table>
-      </div>
+      </Table>
     </div>
   )
 }
